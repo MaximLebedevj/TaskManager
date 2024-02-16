@@ -1,0 +1,21 @@
+:root {
+    /* fill */
+    --base-01:  #F7F7F7;
+    --base-02:  #FFFFFF;
+    --illustrations: #080808;
+    --icons-default: #080808;
+    --icons-disabled: #C7C7C7;
+    --icons-input: #383838;
+    --line-active: #7C7C7C;
+    --line-main: #D9D9D9;
+
+    /* ... */
+    /* Text */
+    --text-01: #080808;
+    --text-02:#7F7F7F;
+    --inactive-tab: #383838;
+    --black-button-text: #FFFFFF;
+    --necessarily: #CC0000;
+
+
+}

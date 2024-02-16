@@ -4,7 +4,7 @@ import MyGraph from "./components/MyGraph.vue";
 </script>
 
 <template>
-  <my-header :isHorizontal="False" />
+  <my-header />
   <router-view></router-view>
   <!-- <my-graph /> -->
 </template>
