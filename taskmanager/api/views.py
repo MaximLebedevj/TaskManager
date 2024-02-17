@@ -11,13 +11,13 @@ from rest_framework.views import APIView
 
 from .models import User
 from .serializer import (UserLoginSerialize, UserLogoutSerialize,
-                         UserSerialize, UserSerializeProfile)
+                         UserRegisterSerialize, UserSerializeProfile)
 
 
 class RegisterApiView(CreateAPIView):
     model = get_user_model()
     permission_classes = [permissions.AllowAny]
-    serializer_class = UserSerialize
+    serializer_class = UserRegisterSerialize
 
 
 class LoginApiView(CreateAPIView):
