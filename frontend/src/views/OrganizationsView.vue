@@ -3,8 +3,9 @@
     <div class="organizations__info" >
       <h2 class="organizations__title">ОРГАНИЗАЦИИ {{}}</h2>
       <button class="organizations__btn" @click="isOpenDialog = true">Добавить организацию</button>
+        <dialog-create-organization v-if="isOpenDialog" /> 
+
     </div>
-    {{isOpenDialog}}
     <div class="organizations__items" >
 
       <div class="organizations__item" :key="organization.title" v-for="organization in organizations" >
@@ -18,12 +19,19 @@
         </div>
       </div>
     </div>
-
   </div>
+
 </template>
 
 <script >
+import DialogCreateOrganization from "../components/DialogCreateOrganization.vue";
+
+
 export default {
+    components: {
+    DialogCreateOrganization,
+  },
+
   data() {
     return {
       organizations: [
