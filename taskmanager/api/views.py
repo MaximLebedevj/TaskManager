@@ -5,13 +5,13 @@ from django.contrib.auth import authenticate, get_user_model, login
 from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User
 from .serializer import (UserLoginSerialize, UserLogoutSerialize,
-                         UserRegisterSerialize, UserSerializeProfile)
+                         UserRegisterSerialize, UserSerializeProfile, UpdateProfileSerialize)
 
 
 class RegisterApiView(CreateAPIView):
@@ -55,6 +55,7 @@ class LoginApiView(CreateAPIView):
 
 
 class UserApiView(APIView):
+    is_auth = False
     def get(self, request):
         token = request.COOKIES.get('jwt')
 
@@ -73,9 +74,7 @@ class UserApiView(APIView):
         return Response(serializer.data)
 
 
-class LogoutApiView(CreateAPIView):
-    serializer_class = UserLogoutSerialize
-
+class LogoutApiView(APIView):
     def get(self, request):
         response = Response()
         response.delete_cookie('jwt')
@@ -84,3 +83,31 @@ class LogoutApiView(CreateAPIView):
         }
 
         return response
+
+
+class UpdateProfile(UpdateAPIView):
+
+    serializer_class = UpdateProfileSerialize
+    queryset = get_user_model().objects.all()
+
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed("User is unauthenticated")
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms='HS256')
+            global user_id
+            user_id = payload['id']
+
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("User is unauthenticated")
+
+        user = User.objects.filter(id=payload['id']).first()
+        serializer = UserSerializeProfile(user)
+
+        return Response(serializer.data)
+
+    def get_object(self):
+        return User.objects.get(pk=user_id)

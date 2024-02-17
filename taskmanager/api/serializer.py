@@ -49,7 +49,7 @@ class UserLogoutSerialize(serializers.ModelSerializer):
 class UserSerializeProfile(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'full_name', 'email', 'password']
+        fields = ['id', 'username', 'full_name', 'email', 'password', 'telegram_name']
 
         extra_kwargs = {
             'password': {'write_only': True}
@@ -62,4 +62,32 @@ class UserSerializeProfile(serializers.ModelSerializer):
         if password is not None:
             instance.set_password(password)
         instance.save()
+        return instance
+
+
+class UpdateProfileSerialize(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'full_name', 'telegram_name', 'username']
+
+    def update(self, instance, validated_data):
+
+        new_email = validated_data.pop('email', None)
+        if new_email is not None:
+            instance.email = new_email
+
+        new_full_name = validated_data.pop('full_name', None)
+        if new_full_name is not None:
+            instance.full_name = new_full_name
+
+        new_telegram_name = validated_data.pop('telegram_name', None)
+        if new_telegram_name is not None:
+            instance.telegram_name = new_telegram_name
+
+        new_user_name = validated_data.pop('username', None)
+        if new_user_name is not None:
+            instance.username = new_user_name
+
+        instance.save()
+
         return instance

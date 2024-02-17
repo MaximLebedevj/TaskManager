@@ -8,6 +8,7 @@ class User(AbstractUser):
     full_name = models.CharField(max_length=255, default='')
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
+    telegram_name = models.CharField(max_length=64, default='')
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['full_name', 'email']
