@@ -22,6 +22,8 @@
         Добавить роль
       </p>
       <my-input
+        
+
         v-if="openInputAddRole"
         @input-event="createRole"
         :isNecessary="false"

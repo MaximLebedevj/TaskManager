@@ -11,8 +11,10 @@
     --input-hover: #FAFAFA;
     --input-focus: #FFFFFF;
     --input-stroke-default: #D9D9D9;
-    --Input-stroke-hover: #9E9E9E;
-    /* ... */
+    --input-stroke-hover: #9E9E9E;
+    --input-stroke-focus: #171717;
+    --input-stroke-error: #CC0000;
+
     /* Text */
     --text-01: #080808;
     --text-02:#7F7F7F;
@@ -20,9 +22,9 @@
     --black-button-text: #FFFFFF;
     --necessarily: #CC0000;
 
-
+    --input-text-error: #E4AFAF;
     /* btn */
     --action-default: #080808;
 
-    --action-hover: #1F1F1F;
+    jh: #1F1F1F;
 }

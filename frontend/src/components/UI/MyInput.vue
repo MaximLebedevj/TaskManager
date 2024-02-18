@@ -3,18 +3,22 @@
   <span class="necessary" v-if="isNecessary"> *</span>
   </p>
 
-  <input @keydown.enter='inputEvent' v-model="inputValue" class="input" type="text" :placeholder="inputText" />
+  <input @keydown.enter='inputEvent' v-model="inputValue" class="input" :class="{'notCorrect': !isCorrectFilling}" type="text" :placeholder="isCorrectFilling ?inputText: 'Поле заполнено неверно' " />
 </template>
 
 <script>
 export default {
   props: {
     inputText: String,
-    isNecessary: Boolean
+    isNecessary: Boolean,
+    isCorrectFilling: {
+      type: Boolean,
+      default: true
+    }
   },
   data(){
       return {
-          inputValue: ''
+          inputValue: '',
       }
   },
   methods: {
@@ -43,5 +47,20 @@ export default {
 }
 .necessary {
     color:red;
+}
+.notCorrect {
+/* Field */
+
+box-sizing: border-box;
+
+
+border: 1px solid var(--input-stroke-error);
+border-radius: 8px;
+
+
+}
+.notCorrect.input::placeholder {
+  color: var(--input-text-error);
+
 }
 </style>
