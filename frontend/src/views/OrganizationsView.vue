@@ -1,9 +1,9 @@
 <template>
-  <div class="organizations">
+  <div>
+      <div class="organizations">
     <div class="organizations__info" >
       <h2 class="organizations__title">ОРГАНИЗАЦИИ {{}}</h2>
       <button class="organizations__btn" @click="isOpenDialog = true">Добавить организацию</button>
-        <dialog-create-organization v-if="isOpenDialog" /> 
 
     </div>
     <div class="organizations__items" >
@@ -20,6 +20,9 @@
       </div>
     </div>
   </div>
+  <dialog-create-organization @close-dialog='closeDialog' v-if="isOpenDialog" /> 
+  </div>
+
 
 </template>
 
@@ -28,10 +31,11 @@ import DialogCreateOrganization from "../components/DialogCreateOrganization.vue
 
 
 export default {
+  emits: ['input-event', 'close-dialog'],
     components: {
     DialogCreateOrganization,
   },
-
+     
   data() {
     return {
       organizations: [
@@ -43,6 +47,11 @@ export default {
       isOpenDialog: false
     };
   },
+  methods: {
+    closeDialog(){
+      this.isOpenDialog = false
+    }
+  },
   computed: {},
 };
 </script>
@@ -51,6 +60,7 @@ export default {
 .organizations {
   position: relative;
   padding: 0 5%;
+  height: 100%;
   .organizations__info {
     display: flex;
     justify-content: space-between;

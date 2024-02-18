@@ -8,7 +8,10 @@
     --icons-input: #383838;
     --line-active: #7C7C7C;
     --line-main: #D9D9D9;
-
+    --input-hover: #FAFAFA;
+    --input-focus: #FFFFFF;
+    --input-stroke-default: #D9D9D9;
+    --Input-stroke-hover: #9E9E9E;
     /* ... */
     /* Text */
     --text-01: #080808;
@@ -16,7 +19,7 @@
     --inactive-tab: #383838;
     --black-button-text: #FFFFFF;
     --necessarily: #CC0000;
-    
+
 
     /* btn */
     --action-default: #080808;
