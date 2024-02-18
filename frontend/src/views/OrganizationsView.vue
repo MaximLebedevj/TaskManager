@@ -49,6 +49,8 @@ export default {
   },
   methods: {
     closeDialog(){
+      const html = document.querySelector('html')
+      html.classList.remove('lock')
       this.isOpenDialog = false
     }
   },

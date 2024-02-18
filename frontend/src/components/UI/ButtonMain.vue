@@ -39,4 +39,7 @@ line-height: 19px;
 
 
 }
+button:hover {
+    background: var(--action-hover);
+}
 </style>
