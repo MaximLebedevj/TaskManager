@@ -1,6 +1,7 @@
 ## Prerequisites for development
 ```sh
 pip install pipenv
+pipenv install
 pipenv sync --dev
 pipenv shell
 ```
@@ -8,6 +9,7 @@ pipenv shell
 ## Prerequisites for production
 ```sh
 pip install pipenv
+pipenv install
 pipenv sync
 pipenv shell
 ```
