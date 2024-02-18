@@ -1,17 +1,19 @@
 import datetime
 
 import jwt
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import (CreateAPIView, ListAPIView,
+                                     RetrieveAPIView, UpdateAPIView)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User
-from .serializer import (UserLoginSerialize, UserLogoutSerialize,
-                         UserRegisterSerialize, UserSerializeProfile, UpdateProfileSerialize)
+from .serializer import (CreateOrganizationSerialize, UpdateProfileSerialize,
+                         UserLoginSerialize, UserLogoutSerialize,
+                         UserRegisterSerialize, UserSerializeProfile)
 
 
 class RegisterApiView(CreateAPIView):
@@ -21,68 +23,46 @@ class RegisterApiView(CreateAPIView):
 
 
 class LoginApiView(CreateAPIView):
+    permission_classes = [permissions.AllowAny]
     serializer_class = UserLoginSerialize
 
-    def post(self, request):
-        email = request.data['email']
-        password = request.data['password']
+    def create(self, request, *args, **kwargs):
+        try:
+            user_login = request.data['username']
+        except KeyError:
+            return Response({"errors": {"detail": "Please, enter login"}},
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            password = request.data['password']
+        except KeyError:
+            return Response({"errors": {"detail": "Please, enter password"}},
+                            status=status.HTTP_400_BAD_REQUEST)
+        user = authenticate(username=user_login, password=password)
+        if user is None:
+            return Response({"errors": "Invalid data"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        login(request, user)
 
-        user = User.objects.filter(email=email).first()
+        user = request.user
+        print("--------")
+        print(user)
 
-        if User is None:
-            raise AuthenticationFailed('No such user')
-        if not user.check_password(password):
-            raise AuthenticationFailed('Invalid password')
-
-        payload = {
-            "id": user.id,
-            "email": user.email,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            "iat": datetime.datetime.utcnow()
-        }
-
-        token = jwt.encode(payload, 'secret', algorithm='HS256')
-
-        response = Response()
-
-        response.set_cookie(key='jwt', value=token, httponly=True)
-
-        response.data = {
-            'jwt token': token
-        }
-
-        return response
+        return Response({"success": "The user has been logged in"},
+                        status=status.HTTP_200_OK)
 
 
 class UserApiView(APIView):
-    is_auth = False
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-
-        if not token:
-            raise AuthenticationFailed("User is unauthenticated")
-
-        try:
-            payload = jwt.decode(token, 'secret', algorithms='HS256')
-
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("User is unauthenticated")
-
-        user = User.objects.filter(id=payload['id']).first()
+        user = User.objects.filter(id=request.user.id).first()
         serializer = UserSerializeProfile(user)
 
         return Response(serializer.data)
 
 
 class LogoutApiView(APIView):
-    def get(self, request):
-        response = Response()
-        response.delete_cookie('jwt')
-        response.data = {
-            'message': 'successful logout'
-        }
-
-        return response
+    def post(self, request):
+        logout(request)
+        return Response({'message': "Logout successful"})
 
 
 class UpdateProfile(UpdateAPIView):
@@ -91,23 +71,13 @@ class UpdateProfile(UpdateAPIView):
     queryset = get_user_model().objects.all()
 
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-
-        if not token:
-            raise AuthenticationFailed("User is unauthenticated")
-
-        try:
-            payload = jwt.decode(token, 'secret', algorithms='HS256')
-            global user_id
-            user_id = payload['id']
-
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("User is unauthenticated")
-
-        user = User.objects.filter(id=payload['id']).first()
-        serializer = UserSerializeProfile(user)
-
-        return Response(serializer.data)
+        global user_id
+        user_id = request.user.id
+        return Response(user_id, status=status.HTTP_200_OK)
 
     def get_object(self):
         return User.objects.get(pk=user_id)
+
+
+class CreateOrganization(CreateAPIView):
+    serializer_class = CreateOrganizationSerialize

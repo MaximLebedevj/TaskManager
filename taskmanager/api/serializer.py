@@ -1,23 +1,35 @@
-from rest_framework import serializers
-
-from .models import User
-
+import jwt
+from django.conf import settings
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.response import Response
 from rest_framework.validators import UniqueValidator
+
+from .models import Organization, User
 
 
 class UserRegisterSerialize(serializers.ModelSerializer):
 
-    password1 = serializers.CharField(write_only=True, validators=[validate_password])
+    password1 = serializers.CharField(
+        write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'full_name', 'password1', 'password2']
+        fields = [
+            'id',
+            'username',
+            'email',
+            'full_name',
+            'password1',
+            'password2']
 
     def validate(self, attrs):
         if attrs['password1'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Пароли не совпадают."})
+            raise serializers.ValidationError(
+                {"password": "Пароли не совпадают."})
 
         return attrs
 
@@ -28,16 +40,16 @@ class UserRegisterSerialize(serializers.ModelSerializer):
             full_name=validated_data['full_name']
         )
 
-
         user.set_password(validated_data['password1'])
         user.save()
 
         return user
 
+
 class UserLoginSerialize(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'password')
+        fields = ('username', 'password')
 
 
 class UserLogoutSerialize(serializers.ModelSerializer):
@@ -49,7 +61,13 @@ class UserLogoutSerialize(serializers.ModelSerializer):
 class UserSerializeProfile(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'full_name', 'email', 'password', 'telegram_name']
+        fields = [
+            'id',
+            'username',
+            'full_name',
+            'email',
+            'password',
+            'telegram_name']
 
         extra_kwargs = {
             'password': {'write_only': True}
@@ -91,3 +109,21 @@ class UpdateProfileSerialize(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class CreateOrganizationSerialize(serializers.ModelSerializer):
+
+    class Meta:
+        model = Organization
+        fields = ['id', 'name']
+
+    def create(self, validated_data):
+
+        user = self.context['request'].user
+
+        organization = Organization(name=validated_data['name'])
+        organization = self.Meta.model(**validated_data)
+        organization.admin_id = self.context['request'].user.id
+
+        organization.save()
+        return organization
