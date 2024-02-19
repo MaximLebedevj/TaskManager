@@ -70,10 +70,11 @@ class UpdateProfile(UpdateAPIView):
     serializer_class = UpdateProfileSerialize
     queryset = get_user_model().objects.all()
 
+
     def get(self, request):
         global user_id
         user_id = request.user.id
-        return Response(user_id, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
 
     def get_object(self):
         return User.objects.get(pk=user_id)
