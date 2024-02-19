@@ -11,6 +11,8 @@ django-filter = "*"
 pyjwt = "*"
 psycopg2-binary = "*"
 django-cors-headers = "*"
+pylint-django = "*"
+django-stubs = "*"
 
 [dev-packages]
 flake8 = "*"
