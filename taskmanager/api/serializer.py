@@ -2,12 +2,16 @@ import jwt
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.validators import UniqueValidator
 
 from .models import Organization, User
+
+from django import forms
+
+from rest_framework.fields import CurrentUserDefault
 
 
 class UserRegisterSerialize(serializers.ModelSerializer):
@@ -84,6 +88,12 @@ class UserSerializeProfile(serializers.ModelSerializer):
 
 
 class UpdateProfileSerialize(serializers.ModelSerializer):
+
+    email = serializers.CharField(default='default@default.default', initial='default@default.default')
+    full_name = serializers.CharField(default='default_name', initial='default_name')
+    telegram_name = serializers.CharField(default='default_telegram', initial='default_telegram')
+    username = serializers.CharField(default='default_username', initial='default_username')
+
     class Meta:
         model = User
         fields = ['id', 'email', 'full_name', 'telegram_name', 'username']
