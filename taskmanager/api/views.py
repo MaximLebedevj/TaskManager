@@ -10,8 +10,10 @@ from rest_framework.generics import (CreateAPIView, ListAPIView,
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User
-from .serializer import (CreateOrganizationSerialize, UpdateProfileSerialize,
+from .models import Organization, Project, User
+from .serializer import (CreateOrganizationSerialize, CreateProjectSerialize,
+                         OrganizationViewSerialize,
+                         ShowAllOrganizationsSerialize, UpdateProfileSerialize,
                          UserLoginSerialize, UserLogoutSerialize,
                          UserRegisterSerialize, UserSerializeProfile)
 
@@ -66,7 +68,8 @@ class UpdateApiProfile(UpdateAPIView):
     queryset = get_user_model().objects.all()
 
     def get(self, request):
-        serializer = self.serializer_class(UpdateProfileSerialize, many=True, context={'request'})
+        serializer = self.serializer_class(
+            UpdateProfileSerialize, many=True, context={'request'})
         global user_id
         user_id = request.user.id
         return Response(status=status.HTTP_200_OK)
@@ -77,3 +80,36 @@ class UpdateApiProfile(UpdateAPIView):
 
 class CreateApiOrganization(CreateAPIView):
     serializer_class = CreateOrganizationSerialize
+
+
+class OrganizationApiView(APIView):
+    def get(self, request, organization_pk):
+        queryset = Organization.objects.filter(id=organization_pk)
+        serializer = OrganizationViewSerialize(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ShowAllOrganizationsApi(ListAPIView):
+    queryset = Organization.objects.all()
+    serializer_class = ShowAllOrganizationsSerialize
+
+    def list(self, request):
+        # Note the use of `get_queryset()` instead of `self.queryset`
+        queryset = self.get_queryset()
+        serializer = ShowAllOrganizationsSerialize(queryset, many=True)
+        return Response(serializer.data)
+
+
+class CreateProjectApi(CreateAPIView):
+    serializer_class = CreateProjectSerialize
+
+    def create(self, request, organization_pk):
+
+        organization = Organization.objects.filter(id=organization_pk).first()
+
+        project = Project(name=request.data['name'],
+                          organization_id = organization)
+
+        project.save()
+        return Response({"success": "project was created"},
+                        status=status.HTTP_200_OK)
