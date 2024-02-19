@@ -42,11 +42,6 @@ class LoginApiView(CreateAPIView):
             return Response({"errors": "Invalid data"},
                             status=status.HTTP_400_BAD_REQUEST)
         login(request, user)
-
-        user = request.user
-        print("--------")
-        print(user)
-
         return Response({"success": "The user has been logged in"},
                         status=status.HTTP_200_OK)
 
@@ -65,13 +60,13 @@ class LogoutApiView(APIView):
         return Response({'message': "Logout successful"})
 
 
-class UpdateProfile(UpdateAPIView):
+class UpdateApiProfile(UpdateAPIView):
 
     serializer_class = UpdateProfileSerialize
     queryset = get_user_model().objects.all()
 
-
     def get(self, request):
+        serializer = self.serializer_class(UpdateProfileSerialize, many=True, context={'request'})
         global user_id
         user_id = request.user.id
         return Response(status=status.HTTP_200_OK)
@@ -80,5 +75,5 @@ class UpdateProfile(UpdateAPIView):
         return User.objects.get(pk=user_id)
 
 
-class CreateOrganization(CreateAPIView):
+class CreateApiOrganization(CreateAPIView):
     serializer_class = CreateOrganizationSerialize

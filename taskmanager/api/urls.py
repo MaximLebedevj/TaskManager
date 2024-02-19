@@ -7,6 +7,6 @@ urlpatterns = [
     path('login/', LoginApiView.as_view()),
     path('logout/', LogoutApiView.as_view()),
     path('profile/', UserApiView.as_view()),
-    path('profile/edit/', UpdateProfile.as_view()),
-    path('organization/', CreateOrganization.as_view())
+    path('profile/edit/', UpdateApiProfile.as_view()),
+    path('organization/', CreateApiOrganization.as_view())
 ]
