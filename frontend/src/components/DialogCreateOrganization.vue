@@ -1,10 +1,10 @@
 <template>
   <div class="dialog">
     <div class="dialog__content">
-      <my-input :isNecessary="true" :inputText="'Напишите название'">
+      <my-input @input-event='inputName' :isNecessary="true" :inputText="'Напишите название'">
         <template v-slot:title> Название</template>
       </my-input>
-      <my-input :isNecessary="false" :inputText="'Напишите описание'">
+      <my-input @input-event='inputDescription' :isNecessary="false" :inputText="'Напишите описание'">
         <template v-slot:title> Описание</template>
       </my-input>
       <p>Роль</p>
@@ -22,10 +22,8 @@
         Добавить роль
       </p>
       <my-input
-        
-
         v-if="openInputAddRole"
-        @input-event="createRole"
+        @input-enter-event="createRole"
         :isNecessary="false"
         :inputText="'Напишите название роли'"
       ></my-input>
@@ -36,7 +34,9 @@
         <button-text @clickEvent="clickEvent">Отмена</button-text>
       </div>
     </div>
+
   </div>
+
 </template>
 
 <script>
@@ -45,7 +45,7 @@ import ButtonMain from "./UI/ButtonMain.vue";
 import ButtonText from "./UI/ButtonText.vue";
 
 export default {
-     emits: ['input-event', 'clickEvent'],
+     emits: ['input-event', 'click-event'],
     data() {
         return {
             roles:[
@@ -54,6 +54,8 @@ export default {
                 {name: "Backend-разработчик"},
                 {name: "Продакт менеджер"},
             ],
+            nameOrganization: '',
+            descriptionOrganization: "",
             openInputAddRole: false
         }
     },
@@ -68,9 +70,27 @@ export default {
             this.roles.push({name: name})
             this.openInputAddRole = false
         },
+          addOrganization() {
+            this.$emit('input-event', this.inputValue)
+        },
         clickEvent() {
-            this.$emit('close-dialog')
+            this.addOrganization() 
+            this.$emit('close-dialog', {
+              'roles': this.roles,
+              'name': this.nameOrganization,
+              'description':  this.descriptionOrganization,
+              'countTasks': 0,
+              'countMembers': 0
+
+            })
+        },
+        inputName(name) {
+          this.nameOrganization = name
+        },
+        inputDescription(description) {
+          this.descriptionOrganization = description
         }
+
     },
 
     mounted() {

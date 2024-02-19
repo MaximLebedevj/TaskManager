@@ -1,9 +1,20 @@
 <template>
-  <p  class="title"><slot name="title"> </slot>
-  <span class="necessary" v-if="isNecessary"> *</span>
-  </p>
+  <div>
+    <p class="title">
+      <slot name="title"> </slot>
+      <span class="necessary" v-if="isNecessary"> *</span>
+    </p>
 
-  <input @keydown.enter='inputEvent' v-model="inputValue" class="input" :class="{'notCorrect': !isCorrectFilling}" type="text" :placeholder="isCorrectFilling ?inputText: 'Поле заполнено неверно' " />
+    <input
+      @input="inputEvent"
+      @keydown.enter="inputEnterEvent"
+      v-model="inputValue"
+      class="input"
+      :class="{ notCorrect: !isCorrectFilling }"
+      type="text"
+      :placeholder="isCorrectFilling ? inputText : 'Поле заполнено неверно'"
+    />
+  </div>
 </template>
 
 <script>
@@ -13,19 +24,23 @@ export default {
     isNecessary: Boolean,
     isCorrectFilling: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
-  data(){
-      return {
-          inputValue: '',
-      }
+  data() {
+    return {
+      inputValue: "",
+    };
   },
   methods: {
-      inputEvent() {
-          this.$emit('input-event', this.inputValue)
-      }
-  }
+    inputEvent() {
+      this.$emit("input-event", this.inputValue);
+    },
+    inputEnterEvent() {
+      this.$emit("input-enter-event", this.inputValue);
+
+    }
+  },
 };
 </script>
 
@@ -40,27 +55,23 @@ export default {
   color: var(--text-01);
 }
 .input {
-    width: 100%;
-    border-radius: 8px;
-    padding: 14px 16px;
-    border: #D9D9D9 solid 1px;
+  width: 100%;
+  border-radius: 8px;
+  padding: 14px 16px;
+  border: #d9d9d9 solid 1px;
 }
 .necessary {
-    color:red;
+  color: red;
 }
 .notCorrect {
-/* Field */
+  /* Field */
 
-box-sizing: border-box;
+  box-sizing: border-box;
 
-
-border: 1px solid var(--input-stroke-error);
-border-radius: 8px;
-
-
+  border: 1px solid var(--input-stroke-error);
+  border-radius: 8px;
 }
 .notCorrect.input::placeholder {
   color: var(--input-text-error);
-
 }
 </style>

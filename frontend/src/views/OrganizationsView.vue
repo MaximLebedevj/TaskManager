@@ -8,11 +8,11 @@
     </div>
     <div class="organizations__items" >
 
-      <div class="organizations__item" :key="organization.title" v-for="organization in organizations" >
+      <div class="organizations__item" :key="organization.name" v-for="organization in organizations" >
         <div class="item__imgWrapper">
           <img class="item__img" src="../assets/organizationCard.png" alt="" />
         </div>
-        <h3 class="item__title">{{organization.title}}</h3>
+        <h3 class="item__title">{{organization.name}}</h3>
         <div class="item__info">
           <p class="info__text">Кол-во задач {{organization.countTasks}}</p>
           <p class="info__text">Кол-во участников {{organization.countMembers}}</p>
@@ -39,18 +39,19 @@ export default {
   data() {
     return {
       organizations: [
-        { title: "Название 1", countTasks: 0, countMembers: 0 },
-        { title: "Название 2", countTasks: 1, countMembers: 1 },
-        { title: "Название 2", countTasks: 1, countMembers: 1 },
+        { name: "Название 1", countTasks: 0, countMembers: 0 },
+        { name: "Название 2", countTasks: 1, countMembers: 1 },
+        { name: "Название 2", countTasks: 1, countMembers: 1 },
 
       ],
       isOpenDialog: false
     };
   },
   methods: {
-    closeDialog(){
+    closeDialog(newOrganization){
       const html = document.querySelector('html')
       html.classList.remove('lock')
+      this.organizations.push(newOrganization)
       this.isOpenDialog = false
     }
   },

@@ -15,6 +15,8 @@
     --input-stroke-focus: #171717;
     --input-stroke-error: #CC0000;
 
+
+
     /* Text */
     --text-01: #080808;
     --text-02:#7F7F7F;
@@ -26,5 +28,5 @@
     /* btn */
     --action-default: #080808;
 
-    jh: #1F1F1F;
+    --action-hover: #1F1F1F;
 }
