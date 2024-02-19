@@ -42,7 +42,7 @@
           организацию или посмотреть старые
         </p>
         <div class="content__button">
-          <ButtonMain> Зарегистрироваться</ButtonMain>
+          <ButtonMain  @click-event='$router.push("registration")' > Зарегистрироваться</ButtonMain>
         </div>
         <div class="content__haveAccount">
           <p>Уже есть аккаунт?</p>

@@ -23,7 +23,7 @@
         </div>
         
         <router-link tag="button" v-if="$store.state.isAuthorized" class="nav__item" to="profile">Личный кабинет</router-link>
-        <router-link tag="button" v-else class="nav__item" to=""> Вход / Регистрация</router-link>
+        <router-link tag="button" v-else class="nav__item" to="registration"> Вход / Регистрация</router-link>
 
       </div>
     </nav>
