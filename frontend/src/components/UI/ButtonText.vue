@@ -29,7 +29,7 @@ line-height: 122%;
 
 
 color: var(--action-default);
-
+cursor: pointer;
 
 }
 </style>

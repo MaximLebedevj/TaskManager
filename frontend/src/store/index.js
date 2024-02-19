@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 export default createStore ( {
     state: {
-        isAuthorized: true
+        isAuthorized: false
     },
     getters: {
 

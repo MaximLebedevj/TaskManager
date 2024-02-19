@@ -1,58 +1,98 @@
 <template>
-  <div>
-      <div class="organizations">
-    <div class="organizations__info" >
-      <h2 class="organizations__title">ОРГАНИЗАЦИИ {{}}</h2>
-      <button class="organizations__btn" @click="isOpenDialog = true">Добавить организацию</button>
-
+  <div class="wrapper">
+    <div class="info">
+      <h2 class="info__title">ОРГАНИЗАЦИИ {{}}</h2>
+      <div class="info__btn_wrapper">
+        <button-main :isDisabled="true" @click-event="openDialog">
+          Добавить организацию</button-main
+        >
+      </div>
     </div>
-    <div class="organizations__items" >
-
-      <div class="organizations__item" :key="organization.name" v-for="organization in organizations" >
-        <div class="item__imgWrapper">
-          <img class="item__img" src="../assets/organizationCard.png" alt="" />
-        </div>
-        <h3 class="item__title">{{organization.name}}</h3>
-        <div class="item__info">
-          <p class="info__text">Кол-во задач {{organization.countTasks}}</p>
-          <p class="info__text">Кол-во участников {{organization.countMembers}}</p>
+    <div class="organizations" v-if="$store.state.isAuthorized">
+      <div class="organizations__items">
+        <div
+          class="organizations__item"
+          :key="organization.name"
+          v-for="organization in organizations"
+        >
+          <div class="item__imgWrapper">
+            <img
+              class="item__img"
+              src="../assets/organizationCard.png"
+              alt=""
+            />
+          </div>
+          <h3 class="item__title">{{ organization.name }}</h3>
+          <div class="item__info">
+            <p class="info__text">Кол-во задач {{ organization.countTasks }}</p>
+            <p class="info__text">
+              Кол-во участников {{ organization.countMembers }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <dialog-create-organization @close-dialog='closeDialog' v-if="isOpenDialog" /> 
-  </div>
 
+    <div v-else class="organizations_notAuth">
+      <div class="organizations__content">
+        <img class="content__img" src="../assets/notAuth.png" alt="" />
+        <p class="content-text1">Вы не вошли в аккаунт</p>
+        <p class="content-text2">
+          Авторизируйетсь или создайте новый аккаунт, чтобы создать новый
+          организацию или посмотреть старые
+        </p>
+        <div class="content__button">
+          <ButtonMain> Зарегистрироваться</ButtonMain>
+        </div>
+        <div class="content__haveAccount">
+          <p>Уже есть аккаунт?</p>
+          <button-text> Войти</button-text>
+        </div>
+      </div>
 
+    </div>
+              <dialog-create-organization
+      @close-dialog="closeDialog"
+      v-if="isOpenDialog"
+    />
+  </div>
 </template>
 
 <script >
 import DialogCreateOrganization from "../components/DialogCreateOrganization.vue";
-
+import ButtonText from "../components/UI/ButtonText.vue";
+import MyInput from "../components/UI/MyInput.vue";
+import ButtonMain from "../components/UI/ButtonMain.vue";
 
 export default {
-  emits: ['input-event', 'close-dialog'],
-    components: {
+  emits: ["input-event", "close-dialog"],
+  components: {
     DialogCreateOrganization,
+    MyInput,
+    ButtonMain,
+    ButtonText,
+    ButtonText,
   },
-     
+
   data() {
     return {
       organizations: [
         { name: "Название 1", countTasks: 0, countMembers: 0 },
         { name: "Название 2", countTasks: 1, countMembers: 1 },
         { name: "Название 2", countTasks: 1, countMembers: 1 },
-
       ],
-      isOpenDialog: false
+      isOpenDialog: false,
     };
   },
   methods: {
-    closeDialog(newOrganization){
-      const html = document.querySelector('html')
-      html.classList.remove('lock')
-      this.organizations.push(newOrganization)
-      this.isOpenDialog = false
+    closeDialog(newOrganization) {
+      const html = document.querySelector("html");
+      html.classList.remove("lock");
+      this.organizations.push(newOrganization);
+      this.isOpenDialog = false;
+    },
+    openDialog() {
+      this.isOpenDialog = true
     }
   },
   computed: {},
@@ -60,38 +100,26 @@ export default {
 </script>
 
 <style lang="scss">
+.wrapper {
+  height: auto;
+  padding: 0 5%;
+}
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .info__title {
+    font-weight: 500;
+    font-size: 24px;
+  }
+  .info__btn_wrapper {
+    width: 100%;
+    max-width: 13% !important;
+  }
+}
 .organizations {
   position: relative;
-  padding: 0 5%;
   height: 100%;
-  .organizations__info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .organizations__title {
-      font-weight: 500;
-      font-size: 24px;
-    }
-    .organizations__btn {
-      color: var(--text-01);
-      padding: 14px 24px;
-      background: var(--action-default);
-      border-radius: 8px;
-      height: 100%;
-      /* Создать проект */
-
-
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 19px;
-
-        color: var(--black-button-text);
-
-
-    }
-  }
 
   .organizations__items {
     display: grid;
@@ -123,7 +151,47 @@ export default {
       }
     }
   }
-  
+}
+.organizations_notAuth {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // flex-direction: column;
+  text-align: center;
+  .organizations__content {
+    max-width: 469px;
+    display: flex;
+    // justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .content-text1 {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 132%;
+      color: var(--text-01);
+      margin: 0;
+    }
+    .content-text2 {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 122%;
 
+      color: var(--text-02);
+    }
+    .content__button {
+      width: 80%;
+    }
+    .content__haveAccount {
+      display: flex;
+      p {
+        white-space: nowrap;
+      }
+    }
+  }
 }
 </style>

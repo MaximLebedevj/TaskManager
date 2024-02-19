@@ -27,6 +27,7 @@
     --input-text-error: #E4AFAF;
     /* btn */
     --action-default: #080808;
+    --action-disabled: #262626;
 
     --action-hover: #1F1F1F;
 }
