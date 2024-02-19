@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import datetime
 
 
 class User(AbstractUser):
@@ -17,6 +18,8 @@ class User(AbstractUser):
 
 class Organization(models.Model):
     name = models.CharField(max_length=64, default='', unique=True)
+    description = models.TextField(default='', blank=True)
+    creation_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
     admin_id = models.IntegerField()
 
 
