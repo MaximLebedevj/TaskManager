@@ -100,6 +100,8 @@ class UpdateProfileSerialize(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
+        print(self.initial_data.get("username"))
+
         new_email = validated_data.pop('email', None)
         if new_email is not None:
             instance.email = new_email
@@ -133,7 +135,7 @@ class CreateOrganizationSerialize(serializers.ModelSerializer):
 
         organization = Organization(name=validated_data['name'], description=validated_data['description'])
         organization = self.Meta.model(**validated_data)
-        organization.admin_id = self.context['request'].user.id
+        organization.admin_id = self.context['request'].user
 
         organization.save()
         return organization

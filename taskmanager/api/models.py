@@ -20,12 +20,14 @@ class Organization(models.Model):
     name = models.CharField(max_length=64, default='', unique=True)
     description = models.TextField(default='', blank=True)
     creation_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    admin_id = models.IntegerField()
+    admin_id = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
 
-class Organization_Users(models.Model):
+class UsersOrganizations(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    organization_id = models.ForeignKey(Organization, on_delete=models.CASCADE)
     role = models.CharField(max_length=32, default='', unique=True)
-    organization = models.ManyToManyField(Organization)
+    participation_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
 
 
 class Project(models.Model):
@@ -33,6 +35,6 @@ class Project(models.Model):
     organization = models.ManyToManyField(Organization)
 
 
-class Project_Users(models.Model):
+class UsersProjects(models.Model):
     role = models.CharField(max_length=32, default='', unique=True)
     project = models.ManyToManyField(Project)
