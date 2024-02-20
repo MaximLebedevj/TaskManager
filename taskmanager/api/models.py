@@ -35,7 +35,9 @@ class Project(models.Model):
     name = models.CharField(max_length=64, default='')
     organization = models.ManyToManyField(Organization)
 
-
 class UsersProjects(models.Model):
     role = models.CharField(max_length=32, default='', unique=True)
     project = models.ManyToManyField(Project)
+
+
+
