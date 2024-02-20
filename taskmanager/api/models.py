@@ -20,7 +20,8 @@ class Organization(models.Model):
     name = models.CharField(max_length=64, default='', unique=True)
     description = models.TextField(default='', blank=True)
     creation_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    admin_id = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    admin_id = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='admin_id')
+    # participants = models.ManyToManyField(UsersOrganizations, blank=True, default=None, related_name='user_id')
 
 
 class UsersOrganizations(models.Model):

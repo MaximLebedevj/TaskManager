@@ -7,7 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.validators import UniqueValidator
 
-from .models import Organization, User
+from .models import Organization, User, UsersOrganizations
 
 from django import forms
 
@@ -99,9 +99,6 @@ class UpdateProfileSerialize(serializers.ModelSerializer):
         fields = ['id', 'email', 'full_name', 'telegram_name', 'username']
 
     def update(self, instance, validated_data):
-
-        print(self.initial_data.get("username"))
-
         new_email = validated_data.pop('email', None)
         if new_email is not None:
             instance.email = new_email
@@ -127,15 +124,25 @@ class CreateOrganizationSerialize(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ['id', 'name', 'description']
+        exclude = ('creation_date', 'admin_id')
 
-    def create(self, validated_data):
 
-        user = self.context['request'].user
+class OrganizationSerialize(serializers.ModelSerializer):
 
-        organization = Organization(name=validated_data['name'], description=validated_data['description'])
-        organization = self.Meta.model(**validated_data)
-        organization.admin_id = self.context['request'].user
+    class Meta:
+        model = Organization
+        fields = ['name', 'description', 'creation_date', 'admin_id']
+        read_only_fields = [
+            # 'participants',
+            'creation_date',
+            'admin_id']
 
-        organization.save()
-        return organization
+
+
+'''
+class OrganizationAddParticipantSerialize(serializers.ModelSerializer):
+    class Meta:
+        model = UsersOrganizations
+        fields = ['user_id', ]
+
+'''
