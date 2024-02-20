@@ -6,16 +6,16 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import (CreateAPIView, ListAPIView,
-                                     RetrieveAPIView, UpdateAPIView)
+                                     RetrieveAPIView, UpdateAPIView, RetrieveUpdateDestroyAPIView)
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .const import ResponseStatus
 
 from .models import Organization, Project, User
 from .serializer import (CreateOrganizationSerialize, CreateProjectSerialize,
-                         OrganizationViewSerialize,
-                         ShowAllOrganizationsSerialize, UpdateProfileSerialize,
+                         UpdateProfileSerialize,
                          UserLoginSerialize, UserLogoutSerialize,
-                         UserRegisterSerialize, UserSerializeProfile, EditOrganizationSerialize)
+                         UserRegisterSerialize, UserSerializeProfile, OrganizationSerialize)
 
 
 class RegisterApiView(CreateAPIView):
@@ -82,22 +82,60 @@ class CreateApiOrganization(CreateAPIView):
     serializer_class = CreateOrganizationSerialize
 
 
-class OrganizationApiView(APIView):
-    def get(self, request, organization_pk):
-        queryset = Organization.objects.filter(id=organization_pk)
-        serializer = OrganizationViewSerialize(queryset, many=True)
-        return Response(serializer.data)
-
-
-class ShowAllOrganizationsApi(ListAPIView):
+class CreateOrganizatonApi(ListAPIView, CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Organization.objects.all()
-    serializer_class = ShowAllOrganizationsSerialize
+    serializer_class = CreateOrganizationSerialize
 
     def list(self, request):
-        # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
-        serializer = ShowAllOrganizationsSerialize(queryset, many=True)
+        serializer = CreateOrganizationSerialize(queryset, many=True)
         return Response(serializer.data)
+
+    def create(self, request):
+        data = request.data.dict()
+        data['admin_id'] = request.user
+        data.pop('csrfmiddlewaretoken')
+        organization: Organization = Organization(**data)
+        organization.save()
+        return Response({"success": "Organization was created"}, status=status.HTTP_200_OK)
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Write permissions are only allowed to the owner of the snippet.
+        return obj.admin_id == request.user
+
+
+class ShowAllAndUpdateOrganizationApi(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticated)
+    queryset = Organization.objects.all()
+    serializer_class = OrganizationSerialize
+
+    def retrieve(self, request, *args, **kwargs):
+        data = OrganizationSerialize(instance=get_object_or_404(Organization, pk=kwargs['organization_pk']))
+        return Response(data.data, status=status.HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        data = OrganizationSerialize().update(
+            instance=get_object_or_404(Organization, pk=kwargs['organization_pk']),
+            validated_data=request.data
+        )
+
+        return Response(OrganizationSerialize(data).data, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        organization = Organization.objects.filter(pk=kwargs['organization_pk'])
+        if not organization.exists():
+            return Response({'status': ResponseStatus.ERROR.value}, status=status.HTTP_404_NOT_FOUND)
+        organization.delete()
+
+        return Response({'status': ResponseStatus.SUCCESS.value}, status=status.HTTP_200_OK)
 
 
 class CreateProjectApi(CreateAPIView):
@@ -113,17 +151,3 @@ class CreateProjectApi(CreateAPIView):
         project.save()
         return Response({"success": "project was created"},
                         status=status.HTTP_200_OK)
-
-
-class EditOrganizationApi(UpdateAPIView):
-
-    serializer_class = EditOrganizationSerialize
-    queryset = Organization.objects.all()
-
-    def get(self, request, organization_pk):
-        global organization_id
-        organization_id = organization_pk
-        return Response(status=status.HTTP_200_OK)
-
-    def get_object(self):
-        return Organization.objects.get(id=organization_id)

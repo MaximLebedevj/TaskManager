@@ -131,31 +131,18 @@ class CreateOrganizationSerialize(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ['id', 'name', 'description']
-
-    def create(self, validated_data):
-
-        user = self.context['request'].user
-
-        organization = self.Meta.model(**validated_data)
-        organization.admin_id = self.context['request'].user
-
-        organization.save()
-        return organization
+        exclude = ('creation_date', 'admin_id')
 
 
-class OrganizationViewSerialize(serializers.ModelSerializer):
+class OrganizationSerialize(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = '__all__'
-
-
-class ShowAllOrganizationsSerialize(serializers.ModelSerializer):
-
-    class Meta:
-        model = Organization
-        fields = '__all__'
+        fields = ['name', 'description', 'creation_date', 'admin_id']
+        read_only_fields = [
+            # 'participants',
+            'creation_date',
+            'admin_id']
 
 
 class CreateProjectSerialize(serializers.ModelSerializer):
@@ -163,25 +150,3 @@ class CreateProjectSerialize(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'name']
-
-
-class EditOrganizationSerialize(serializers.ModelSerializer):
-
-    class Meta:
-        model = Organization
-        fields = ['id', 'name', 'description']
-
-
-    def update(self, instance, validated_data):
-
-        new_name = validated_data.pop('name', None)
-        if new_name is not None:
-            instance.name = new_name
-
-        new_description = validated_data.pop('description', None)
-        if new_description is not None:
-            instance.description = new_description
-
-        instance.save()
-
-        return instance
