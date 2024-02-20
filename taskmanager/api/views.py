@@ -6,16 +6,18 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import (CreateAPIView, ListAPIView,
-                                     RetrieveAPIView, UpdateAPIView, RetrieveUpdateDestroyAPIView)
+                                     RetrieveAPIView,
+                                     RetrieveUpdateDestroyAPIView,
+                                     UpdateAPIView)
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .const import ResponseStatus
 
+from .const import ResponseStatus
 from .models import Organization, Project, User
 from .serializer import (CreateOrganizationSerialize, CreateProjectSerialize,
-                         UpdateProfileSerialize,
+                         OrganizationSerialize, UpdateProfileSerialize,
                          UserLoginSerialize, UserLogoutSerialize,
-                         UserRegisterSerialize, UserSerializeProfile, OrganizationSerialize)
+                         UserRegisterSerialize, UserSerializeProfile)
 
 
 class RegisterApiView(CreateAPIView):
@@ -98,7 +100,8 @@ class CreateOrganizatonApi(ListAPIView, CreateAPIView):
         data.pop('csrfmiddlewaretoken')
         organization: Organization = Organization(**data)
         organization.save()
-        return Response({"success": "Organization was created"}, status=status.HTTP_200_OK)
+        return Response({"success": "Organization was created"},
+                        status=status.HTTP_200_OK)
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -118,24 +121,33 @@ class ShowAllAndUpdateOrganizationApi(RetrieveUpdateDestroyAPIView):
     serializer_class = OrganizationSerialize
 
     def retrieve(self, request, *args, **kwargs):
-        data = OrganizationSerialize(instance=get_object_or_404(Organization, pk=kwargs['organization_pk']))
+        data = OrganizationSerialize(
+            instance=get_object_or_404(
+                Organization,
+                pk=kwargs['organization_pk']))
         return Response(data.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         data = OrganizationSerialize().update(
-            instance=get_object_or_404(Organization, pk=kwargs['organization_pk']),
-            validated_data=request.data
-        )
+            instance=get_object_or_404(
+                Organization,
+                pk=kwargs['organization_pk']),
+            validated_data=request.data)
 
-        return Response(OrganizationSerialize(data).data, status=status.HTTP_200_OK)
+        return Response(
+            OrganizationSerialize(data).data,
+            status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
-        organization = Organization.objects.filter(pk=kwargs['organization_pk'])
+        organization = Organization.objects.filter(
+            pk=kwargs['organization_pk'])
         if not organization.exists():
-            return Response({'status': ResponseStatus.ERROR.value}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'status': ResponseStatus.ERROR.value},
+                            status=status.HTTP_404_NOT_FOUND)
         organization.delete()
 
-        return Response({'status': ResponseStatus.SUCCESS.value}, status=status.HTTP_200_OK)
+        return Response({'status': ResponseStatus.SUCCESS.value},
+                        status=status.HTTP_200_OK)
 
 
 class CreateProjectApi(CreateAPIView):
@@ -146,7 +158,7 @@ class CreateProjectApi(CreateAPIView):
         organization = Organization.objects.filter(id=organization_pk).first()
 
         project = Project(name=request.data['name'],
-                          organization_id = organization)
+                          organization_id=organization)
 
         project.save()
         return Response({"success": "project was created"},
