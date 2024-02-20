@@ -106,8 +106,6 @@ class UpdateProfileSerialize(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
-        print(self.initial_data.get("username"))
-
         new_email = validated_data.pop('email', None)
         if new_email is not None:
             instance.email = new_email
@@ -165,3 +163,25 @@ class CreateProjectSerialize(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'name']
+
+
+class EditOrganizationSerialize(serializers.ModelSerializer):
+
+    class Meta:
+        model = Organization
+        fields = ['id', 'name', 'description']
+
+
+    def update(self, instance, validated_data):
+
+        new_name = validated_data.pop('name', None)
+        if new_name is not None:
+            instance.name = new_name
+
+        new_description = validated_data.pop('description', None)
+        if new_description is not None:
+            instance.description = new_description
+
+        instance.save()
+
+        return instance

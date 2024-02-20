@@ -11,5 +11,6 @@ urlpatterns = [
     path('organization/create', CreateApiOrganization.as_view()),
     path('organization/', ShowAllOrganizationsApi.as_view()),
     path('organization/<int:organization_pk>/', OrganizationApiView.as_view()),
+    path('organization/<int:organization_pk>/edit', EditOrganizationApi.as_view()),
     path('organization/<int:organization_pk>/project/create', CreateProjectApi.as_view())
 ]

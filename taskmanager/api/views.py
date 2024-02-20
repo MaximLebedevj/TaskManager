@@ -15,7 +15,7 @@ from .serializer import (CreateOrganizationSerialize, CreateProjectSerialize,
                          OrganizationViewSerialize,
                          ShowAllOrganizationsSerialize, UpdateProfileSerialize,
                          UserLoginSerialize, UserLogoutSerialize,
-                         UserRegisterSerialize, UserSerializeProfile)
+                         UserRegisterSerialize, UserSerializeProfile, EditOrganizationSerialize)
 
 
 class RegisterApiView(CreateAPIView):
@@ -113,3 +113,17 @@ class CreateProjectApi(CreateAPIView):
         project.save()
         return Response({"success": "project was created"},
                         status=status.HTTP_200_OK)
+
+
+class EditOrganizationApi(UpdateAPIView):
+
+    serializer_class = EditOrganizationSerialize
+    queryset = Organization.objects.all()
+
+    def get(self, request, organization_pk):
+        global organization_id
+        organization_id = organization_pk
+        return Response(status=status.HTTP_200_OK)
+
+    def get_object(self):
+        return Organization.objects.get(id=organization_id)
