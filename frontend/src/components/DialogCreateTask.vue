@@ -1,7 +1,7 @@
 <template>
   <div class="dialog" v-if="isOpen">
     <div class="dialog__content">
-      <div>Добавление организации</div>
+      <div>Добавление задаяи</div>
       <my-input
         @input-event="inputName"
         :isNecessary="true"
@@ -10,12 +10,21 @@
         <template v-slot:title> Название</template>
       </my-input>
       <my-input
-        @input-event="inputDescription"
+        @input-event="inputDeadline"
         :isNecessary="false"
-        :inputText="'Напишите описание'"
+        :inputText="'Напишите срок сдачи'"
       >
-        <template v-slot:title> Описание</template>
+        <template v-slot:title> Срок сдачи</template>
       </my-input>
+
+        <my-input
+        @input-event="inputCountMembers"
+        :isNecessary="false"
+        :inputText="'Напишите кол-во участников'"
+      >
+        <template v-slot:title> Кол-во участников</template>
+      </my-input>
+
       <p>Роль</p>
       <div class="roles">
         <div class="role" :key="role.name" v-for="role in roles">
@@ -37,7 +46,7 @@
         :inputText="'Напишите название роли'"
       ></my-input>
       <div class="buttons">
-        <button-main @clickEvent="sendDataOrganization">Добавить задачу </button-main>
+        <button-main @clickEvent="sendDataTask">Добавить задачу </button-main>
         <button-text @clickEvent="closeDialog">Отмена</button-text>
       </div>
     </div>
@@ -59,8 +68,8 @@ export default {
         { name: "Backend-разработчик" },
         { name: "Продакт менеджер" },
       ],
-      nameOrganization: "",
-      descriptionOrganization: "",
+      nameTask: "",
+      descriptionTask: "",
       openInputAddRole: false,
       isOpen: true,
     };
@@ -78,27 +87,27 @@ export default {
       this.roles.push({ name: name });
       this.openInputAddRole = false;
     },
-    addOrganization() {
+    addTask() {
       this.$emit("input-event", this.inputValue);
     },
-    sendDataOrganization() {
-      // this.addOrganization();
+    sendDataTask() {
+      // this.addTask();
       this.$emit("close-dialog", {
         roles: this.roles,
-        name: this.nameOrganization,
-        description: this.descriptionOrganization,
+        title: this.nameTask,
+        description: this.descriptionTask,
         countTasks: 0,
         countMembers: 0,
       });
     },
     inputName(name) {
-      this.nameOrganization = name;
+      this.nameTask = name;
     },
-    inputDescription(description) {
-      this.descriptionOrganization = description;
+    inputDeadline(description) {
+      this.descriptionTask = description;
     },
     closeDialog() {
-      this.addOrganization();
+      this.addTask();
       this.$emit("close-dialog", {});
     }
   },

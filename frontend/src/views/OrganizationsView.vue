@@ -3,7 +3,7 @@
     <div class="info">
       <h2 class="info__title">ОРГАНИЗАЦИИ {{}}</h2>
       <div class="info__btn_wrapper">
-        <button-main :isDisabled="true" @click-event="openDialog">
+        <button-main :isDisabled="!$store.state.isAuthorized" @click-event="openDialog">
           Добавить организацию</button-main
         >
       </div>
@@ -14,6 +14,7 @@
           class="organizations__item"
           :key="organization.name"
           v-for="organization in organizations"
+          @click="$router.push(`Organizations/ ${organization.name}`)"
         >
           <div class="item__imgWrapper">
             <img
@@ -88,7 +89,10 @@ export default {
     closeDialog(newOrganization) {
       const html = document.querySelector("html");
       html.classList.remove("lock");
-      this.organizations.push(newOrganization);
+      if (Object.keys(newOrganization  ).length != 0) {
+          this.organizations.push(newOrganization);
+
+      }
       this.isOpenDialog = false;
     },
     openDialog() {

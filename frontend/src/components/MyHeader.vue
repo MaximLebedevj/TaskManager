@@ -3,7 +3,7 @@
     <nav>
       <div class="nav_left">
         <img class="nav__item" src="../assets/logo.png" alt="" />
-        <router-link tag="button" class="nav__item" to="Organizations">Организации</router-link>
+        <router-link tag="button" class="nav__item" replace="true" to="/" > Организации</router-link>
         <router-link tag="button"  class="nav__item" to="" v-if="$store.state.isAuthorized" >Чаты</router-link>
         <p class="nav__item disabled "  v-else >Чаты</p>
 

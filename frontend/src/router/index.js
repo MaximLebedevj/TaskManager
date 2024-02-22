@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from '../views/MainView.vue'
 import OrganizationsView from '../views/OrganizationsView.vue'
 import RegistrationView from '../views/RegistrationView.vue'
+import OrganizationView from '../views/OrganizationView.vue'
 
 
 const router = createRouter({
@@ -18,6 +19,10 @@ const router = createRouter({
         {
             path: '/Registration',
             component: RegistrationView
+        },
+        {
+            path: '/Organizations/:nameOrganization',
+            component: OrganizationView
         },
     ]
 })
