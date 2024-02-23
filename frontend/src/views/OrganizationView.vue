@@ -11,7 +11,7 @@
       <div v-for="task in tasks" :key="task.title" class="task__item">
         <div class="item__title">{{ task.title }}</div>
         <div class="item__deadline">{{ task.deadline }}</div>
-        <div class="item__members">{{ task.members }}</div>
+        <div class="item__members">{{ task.countMembers }}</div>
         <div class="item__countTasks">{{ task.countTasks }}</div>
       </div>
     </div>
@@ -41,13 +41,13 @@ export default {
         {
           title: "sfesfsef",
           deadline: "25 февраля 2024",
-          members: 5,
+          countMembers: 5,
           countTasks: 43,
         },
         {
           title: "sfsef",
           deadline: "25 февраля 2024",
-          members: 5,
+          countMembers: 5,
           countTasks: 43,
         },
       ],

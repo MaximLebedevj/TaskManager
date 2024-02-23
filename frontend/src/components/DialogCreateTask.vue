@@ -11,7 +11,6 @@
       </my-input>
       <my-input
         @input-event="inputDeadline"
-        :isNecessary="false"
         :inputText="'Напишите срок сдачи'"
       >
         <template v-slot:title> Срок сдачи</template>
@@ -19,11 +18,17 @@
 
         <my-input
         @input-event="inputCountMembers"
-        :isNecessary="false"
         :inputText="'Напишите кол-во участников'"
       >
         <template v-slot:title> Кол-во участников</template>
       </my-input>
+        <my-input
+        @input-event="inputCountTask"
+        :inputText="'Напишите кол-во участников'"
+      >
+        <template v-slot:title> Кол-во задач</template>
+      </my-input>
+
 
       <p>Роль</p>
       <div class="roles">
@@ -69,9 +74,12 @@ export default {
         { name: "Продакт менеджер" },
       ],
       nameTask: "",
-      descriptionTask: "",
+      title:'',
       openInputAddRole: false,
       isOpen: true,
+      deadline: "",
+      countTask: 0,
+      countMembers: 0
     };
   },
   components: {
@@ -95,16 +103,22 @@ export default {
       this.$emit("close-dialog", {
         roles: this.roles,
         title: this.nameTask,
-        description: this.descriptionTask,
-        countTasks: 0,
-        countMembers: 0,
+        deadline: this.deadline,
+        countTasks: this.countTask,
+        countMembers: this.countMembers
       });
     },
     inputName(name) {
       this.nameTask = name;
     },
-    inputDeadline(description) {
-      this.descriptionTask = description;
+    inputDeadline(deadline) {
+      this.deadline = deadline;
+    },
+    inputCountTask(countTask) {
+      this.countTask = countTask;
+    },
+    inputCountMembers(countMembers) {
+      this.countMembers = countMembers;
     },
     closeDialog() {
       this.addTask();
