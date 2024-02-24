@@ -7,6 +7,7 @@ export default createStore ( {
                 name: "name 1",
                 countTasks: 2,
                 countMembers: 1,
+                description: "4243",
                 tasks: [
                     {
                       title: "sfesfsef",
@@ -24,6 +25,7 @@ export default createStore ( {
             },
             {
                 name: "name 2",
+                description: "3334",
                 countTasks: 20,
                 countMembers: 2,
                 tasks: [

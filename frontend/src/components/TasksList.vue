@@ -1,19 +1,22 @@
 <template>
-  <div class="tasks">
-    <div
-      @click="$router.push($route.params.nameOrganization + '/' + task.title)"
-      v-for="task in tasks"
-      :key="task.title"
-      class="task__item"
-    >
-      <div class="item__title">{{ task.title }}</div>
-      <div class="item__deadline">{{ task.deadline }}</div>
-      <div class="item__members">{{ task.countMembers }}</div>
-      <div class="item__countTasks">{{ task.countTasks }}</div>
+<div>
+    <div class="button">
+      <button-main @clickEvent="isOpenDialog = true">
+        Добавить проект</button-main
+      >
     </div>
-  <dialog-create-task @close-dialog="createNewTask" v-if="isOpenDialog">
-  </dialog-create-task>
-  </div>
+    <div class="tasks">
+      <div @click="$router.push($route.params.nameOrganization + '/'+ task.title)" v-for="task in tasks" :key="task.title" class="task__item">
+        <div class="item__title">{{ task.title }}</div>
+        <div class="item__deadline">{{ task.deadline }}</div>
+        <div class="item__members">{{ task.countMembers }}</div>
+        <div class="item__countTasks">{{ task.countTasks }}</div>
+      </div>
+          <dialog-create-task @close-dialog="createNewTask" v-if="isOpenDialog">
+    </dialog-create-task>
+    </div>
+</div>
+
 
 </template>
 
@@ -24,7 +27,7 @@ import MyInput from "../components/UI/MyInput.vue";
 import ButtonMain from "../components/UI/ButtonMain.vue";
 
 export default {
-  emits: ["input-event", "close-dialog"],
+    emits: ["input-event", "close-dialog"],
   components: {
     DialogCreateTask,
     MyInput,
@@ -32,33 +35,30 @@ export default {
     ButtonText,
     ButtonText,
   },
+  props: {
+      tasks: Array
+  },
   data() {
     return {
-      tasks: {},
       isOpenDialog: false,
     };
   },
   methods: {
-    createNewTask(newTask) {
-      if (Object.keys(newTask).length != 0) {
-        this.tasks.push(newTask);
+      createNewTask(newTask) {
+      if (Object.keys(newTask  ).length != 0) {
+          this.tasks.push(newTask);
       }
-      this.isOpenDialog = false;
-    },
+        this.isOpenDialog = false
+      },
+
+
+
   },
-  mounted() {
-    console.log(this.$route.params.nameOrganization.slice(1));
-    console.log(
-      this.$store.getters.getTasksByName(
-        this.$route.params.nameOrganization.slice(1)
-      )
-    );
-    const organization = this.$store.getters.getTasksByName(
-      this.$route.params.nameOrganization.slice(1)
-    );
-    this.tasks = organization.tasks;
+
+  computed: {
+
   },
-  computed: {},
+  
 };
 </script>
 
@@ -100,3 +100,4 @@ export default {
     }
   }
 }
+</style>
