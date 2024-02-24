@@ -100,6 +100,8 @@ export default {
     },
     sendDataTask() {
       // this.addTask();
+      const html = document.querySelector("html");
+      html.classList.remove("lock");
       this.$emit("close-dialog", {
         roles: this.roles,
         title: this.nameTask,
@@ -121,6 +123,8 @@ export default {
       this.countMembers = countMembers;
     },
     closeDialog() {
+            const html = document.querySelector("html");
+      html.classList.remove("lock");
       this.addTask();
       this.$emit("close-dialog", {});
     }

@@ -13,7 +13,7 @@
         <div
           class="organizations__item"
           :key="organization.name"
-          v-for="organization in $store.state.organizations"
+          v-for="organization in organizations"
           @click="$router.push(`Organizations/ ${organization.name}`)"
         >
           <div class="item__imgWrapper">
@@ -65,7 +65,6 @@ import DialogCreateOrganization from "../components/DialogCreateOrganization.vue
 import ButtonText from "../components/UI/ButtonText.vue";
 import MyInput from "../components/UI/MyInput.vue";
 import ButtonMain from "../components/UI/ButtonMain.vue";
-import {mapState, mapGetters, mapActions, mapMutations} from 'vuex'
 export default {
   emits: ["input-event", "close-dialog"],
   components: {
@@ -78,11 +77,7 @@ export default {
   
   data() {
     return {
-      organizations: [
-        { name: "Название 1", countTasks: 0, countMembers: 0 },
-        { name: "Название 2", countTasks: 1, countMembers: 1 },
-        { name: "Название 2", countTasks: 1, countMembers: 1 },
-      ],
+      organizations: this.$store.state.organizations,
       isOpenDialog: false,
     };
   },

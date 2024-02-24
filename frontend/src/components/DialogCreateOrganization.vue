@@ -79,16 +79,18 @@ export default {
       this.openInputAddRole = false;
     },
     addOrganization() {
+      const html = document.querySelector("html");
+      html.classList.remove("lock");
       this.$emit("input-event", this.inputValue);
     },
     sendDataOrganization() {
-      // this.addOrganization();
       this.$emit("close-dialog", {
         roles: this.roles,
         name: this.nameOrganization,
         description: this.descriptionOrganization,
         countTasks: 0,
         countMembers: 0,
+        tasks: []
       });
     },
     inputName(name) {
@@ -98,6 +100,9 @@ export default {
       this.descriptionOrganization = description;
     },
     closeDialog() {
+
+
+  
       this.addOrganization();
       this.$emit("close-dialog", {});
     }

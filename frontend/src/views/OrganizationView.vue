@@ -1,6 +1,6 @@
 <template>
   <div class="organization">
-    <p>Организация {{getTasksByName}} </p>
+    <p>Организация {{this.$route.params.nameOrganization}} </p>
     <h2>{{ $route.params.nameOrganization }}</h2>
     <div class="button">
       <button-main @clickEvent="isOpenDialog = true">
@@ -14,9 +14,10 @@
         <div class="item__members">{{ task.countMembers }}</div>
         <div class="item__countTasks">{{ task.countTasks }}</div>
       </div>
-    </div>
-    <dialog-create-task @close-dialog="createNewTask" v-if="isOpenDialog">
+          <dialog-create-task @close-dialog="createNewTask" v-if="isOpenDialog">
     </dialog-create-task>
+    </div>
+
 
   </div>
 </template>
@@ -48,13 +49,15 @@ export default {
           this.tasks.push(newTask);
       }
         this.isOpenDialog = false
+      },
+      getTasksByName() {
+        const organization = this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1))
+        this.tasks = organization.tasks
       }
   },
   mounted() {
-    console.log(this.$route.params.nameOrganization.slice(1));
-    console.log(this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1)));
-    const organization = this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1))
-    this.tasks = organization.tasks
+   this.getTasksByName()
+
   },
   computed: {
 

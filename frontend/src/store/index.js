@@ -57,8 +57,9 @@ export default createStore ( {
     }
     },
     mutations: {
-        pushOrganization(state) {
-            state.organizations.push(organization)
+        pushOrganization(state, newOrganization) {
+            state.organizations.push(newOrganization)
+            console.log('sef');
         },
 
     },
