@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="info">
-      <h2 class="info__title">ОРГАНИЗАЦИИ {{}}</h2>
+      <h2 class="info__title">ОРГАНИЗАЦИИ </h2>
       <div class="info__btn_wrapper">
         <button-main :isDisabled="!$store.state.isAuthorized" @click-event="openDialog">
           Добавить организацию</button-main
@@ -13,7 +13,7 @@
         <div
           class="organizations__item"
           :key="organization.name"
-          v-for="organization in organizations"
+          v-for="organization in $store.state.organizations"
           @click="$router.push(`Organizations/ ${organization.name}`)"
         >
           <div class="item__imgWrapper">
@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-
+  
     <div v-else class="organizations_notAuth">
       <div class="organizations__content">
         <img class="content__img" src="../assets/notAuth.png" alt="" />
@@ -57,6 +57,7 @@
       v-if="isOpenDialog"
     />
   </div>
+
 </template>
 
 <script >
@@ -64,7 +65,7 @@ import DialogCreateOrganization from "../components/DialogCreateOrganization.vue
 import ButtonText from "../components/UI/ButtonText.vue";
 import MyInput from "../components/UI/MyInput.vue";
 import ButtonMain from "../components/UI/ButtonMain.vue";
-
+import {mapState, mapGetters, mapActions, mapMutations} from 'vuex'
 export default {
   emits: ["input-event", "close-dialog"],
   components: {
@@ -74,7 +75,7 @@ export default {
     ButtonText,
     ButtonText,
   },
-
+  
   data() {
     return {
       organizations: [
@@ -90,7 +91,7 @@ export default {
       const html = document.querySelector("html");
       html.classList.remove("lock");
       if (Object.keys(newOrganization  ).length != 0) {
-          this.organizations.push(newOrganization);
+          this.$store.commit('pushOrganization', newOrganization)
 
       }
       this.isOpenDialog = false;

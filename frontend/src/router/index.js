@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainPage from '../views/MainView.vue'
 import OrganizationsView from '../views/OrganizationsView.vue'
-import RegistrationView from '../views/RegistrationView.vue'
 import OrganizationView from '../views/OrganizationView.vue'
+
+import RegistrationView from '../views/RegistrationView.vue'
+import TaskView from '../views/TaskView.vue'
 
 
 const router = createRouter({
@@ -23,6 +24,10 @@ const router = createRouter({
         {
             path: '/Organizations/:nameOrganization',
             component: OrganizationView
+        },
+        {
+            path: '/Organizations/:nameOrganization/:nameTask',
+            component: TaskView
         },
     ]
 })

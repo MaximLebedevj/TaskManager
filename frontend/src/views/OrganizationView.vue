@@ -1,6 +1,6 @@
 <template>
   <div class="organization">
-    <p>Организация</p>
+    <p>Организация {{getTasksByName}} </p>
     <h2>{{ $route.params.nameOrganization }}</h2>
     <div class="button">
       <button-main @clickEvent="isOpenDialog = true">
@@ -8,7 +8,7 @@
       >
     </div>
     <div class="tasks">
-      <div v-for="task in tasks" :key="task.title" class="task__item">
+      <div @click="$router.push($route.params.nameOrganization + '/'+ task.title)" v-for="task in tasks" :key="task.title" class="task__item">
         <div class="item__title">{{ task.title }}</div>
         <div class="item__deadline">{{ task.deadline }}</div>
         <div class="item__members">{{ task.countMembers }}</div>
@@ -17,6 +17,7 @@
     </div>
     <dialog-create-task @close-dialog="createNewTask" v-if="isOpenDialog">
     </dialog-create-task>
+
   </div>
 </template>
 
@@ -37,20 +38,7 @@ export default {
   },
   data() {
     return {
-      tasks: [
-        {
-          title: "sfesfsef",
-          deadline: "25 февраля 2024",
-          countMembers: 5,
-          countTasks: 43,
-        },
-        {
-          title: "sfsef",
-          deadline: "25 февраля 2024",
-          countMembers: 5,
-          countTasks: 43,
-        },
-      ],
+      tasks: {},
       isOpenDialog: false,
     };
   },
@@ -61,6 +49,15 @@ export default {
       }
         this.isOpenDialog = false
       }
+  },
+  mounted() {
+    console.log(this.$route.params.nameOrganization.slice(1));
+    console.log(this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1)));
+    const organization = this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1))
+    this.tasks = organization.tasks
+  },
+  computed: {
+
   }
 };
 </script>
