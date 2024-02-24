@@ -20,6 +20,7 @@
 
     <tasks-list v-if="isOpenProjects" :tasks='organization.tasks'> </tasks-list>
     <organization-description v-else-if="isOpenDescription" >{{organization.description}}</organization-description>
+    <members-list :members='organization.members' v-else> </members-list>
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import MyInput from "../components/UI/MyInput.vue";
 import ButtonMain from "../components/UI/ButtonMain.vue";
 import TasksList from "../components/TasksList.vue";
 import OrganizationDescription from "../components/OrganizationDescription.vue";
+import MembersList from "../components/MembersList.vue";
 
 
 export default {
@@ -41,11 +43,12 @@ export default {
     ButtonText,
     ButtonText,
     TasksList,
-    OrganizationDescription
+    OrganizationDescription,
+    MembersList
   },
   data() {
     return {
-      organization: {},
+      organization:  this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1)),
       isOpenDialog: false,
 
       isOpenProjects: true,
@@ -60,13 +63,13 @@ export default {
       }
         this.isOpenDialog = false
       },
-      getTasksByName() {
-        const organization = this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1))
-        this.organization = organization
-      }
+      // getTasksByName() {
+      //   const organization = this.$store.getters.getTasksByName(this.$route.params.nameOrganization.slice(1))
+      //   this.organization = organization
+      // }
   },
   mounted() {
-   this.getTasksByName()
+  //  this.getTasksByName()
 
   },
   computed: {

@@ -1,7 +1,7 @@
 <template>
   <div class="dialog" v-if="isOpen">
     <div class="dialog__content">
-      <div>Добавление задаяи</div>
+      <div>Добавление задачи</div>
       <my-input
         @input-event="inputName"
         :isNecessary="true"

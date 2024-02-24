@@ -8,6 +8,25 @@ export default createStore ( {
                 countTasks: 2,
                 countMembers: 1,
                 description: "4243",
+                members: [
+                  {
+                    name: 'Иванов Василий',
+                    email: 'example@mail.ru',
+                    telNum: '8900123-45-67',
+                    countTask: 0,
+                    countProjects: 0,
+                    rating: 1,
+                    
+                  },
+                  {
+                    name: 'Иванов Иван',
+                    email: 'example@mail.ru',
+                    telNum: '8900123-45-67',
+                    countTask: 0,
+                    countProjects: 0,
+                    rating: 1
+                  }
+                ],
                 tasks: [
                     {
                       title: "sfesfsef",
@@ -28,6 +47,24 @@ export default createStore ( {
                 description: "3334",
                 countTasks: 20,
                 countMembers: 2,
+                members: [
+                  {
+                    name: 'Иванов Иван',
+                    email: 'example@mail.ru',
+                    telNum: '8900123-45-67',
+                    countTask: 0,
+                    countProjects: 0,
+                    rating: 1
+                  },
+                  {
+                    name: 'Иванов Иван',
+                    email: 'example@mail.ru',
+                    telNum: '8900123-45-67',
+                    countTask: 0,
+                    countProjects: 0,
+                    rating: 1
+                  }
+                ],
                 tasks: [
                     {
                       title: "hkuhk",
