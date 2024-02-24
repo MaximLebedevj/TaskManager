@@ -4,10 +4,10 @@ export default createStore ( {
         isAuthorized: true,
         organizations: [
             {
-                name: "name 1",
+                name: "Зимняя проектная школа",
                 countTasks: 2,
-                countMembers: 1,
-                description: "4243",
+                countMembers: 2,
+                description: "Lorem ipsum dolor sit amet consectetur. Id turpis metus et adipiscing adipiscing tincidunt venenatis pharetra feugiat. Mauris et quam et vel cursus quam vestibulum. Venenatis lorem nisl hac nulla. Porttitor feugiat faucibus sodales arcu pretium. Urna neque nisl maecenas a faucibus nisl at auctor et. Suspendisse viverra pretium velit morbi augue feugiat.",
                 members: [
                   {
                     name: 'Иванов Василий',
@@ -29,13 +29,13 @@ export default createStore ( {
                 ],
                 tasks: [
                     {
-                      title: "sfesfsef",
+                      title: "task 1",
                       deadline: "25 февраля 2024",
                       countMembers: 5,
                       countTasks: 43,
                     },
                     {
-                      title: "sfsef",
+                      title: "task 1",
                       deadline: "25 февраля 2024",
                       countMembers: 5,
                       countTasks: 43,
@@ -67,13 +67,13 @@ export default createStore ( {
                 ],
                 tasks: [
                     {
-                      title: "hkuhk",
+                      title: "task 1",
                       deadline: "25 февраля 2024",
                       countMembers: 5,
                       countTasks: 43,
                     },
                     {
-                      title: "kh",
+                      title: "task 2",
                       deadline: "26 февраля 2024",
                       countMembers: 2,
                       countTasks: 4,
@@ -85,20 +85,15 @@ export default createStore ( {
 
     },
     getters: {
-    //   getTasksByName(state, nameOrganization) {
-    //     // const organization = state.organizations.map(organization => organization.name == nameOrganization);
-    //     return nameOrganization
-    // }
-    getTasksByName: (state) => (nameOrganization) => {
-      const selectOrganization = state.organizations.find(organization =>organization.name === nameOrganization)
+      getTasksByName: (state) => (nameOrganization) => {
+        const selectOrganization = state.organizations.find(organization =>organization.name === nameOrganization)
 
-      return selectOrganization
-    }
+        return selectOrganization
+      }
     },
     mutations: {
         pushOrganization(state, newOrganization) {
             state.organizations.push(newOrganization)
-            console.log('sef');
         },
 
     },

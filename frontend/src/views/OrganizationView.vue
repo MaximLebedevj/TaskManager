@@ -2,6 +2,7 @@
   <div class="organization">
     <p>Организация</p>
     <h2>{{ $route.params.nameOrganization }}</h2>
+    <button-delete >Удалить организацию </button-delete>
     <div class="organization__nav" >
       <a class="nav__item" :class="{'select': isOpenProjects}" @click="isOpenProjects = true, isOpenDescription = false, isOpenMembers = false " >
       <p>Проекты</p>
@@ -32,6 +33,7 @@ import ButtonMain from "../components/UI/ButtonMain.vue";
 import TasksList from "../components/TasksList.vue";
 import OrganizationDescription from "../components/OrganizationDescription.vue";
 import MembersList from "../components/MembersList.vue";
+import ButtonDelete from "../components/UI/ButtonDelete.vue";
 
 
 export default {
@@ -40,6 +42,7 @@ export default {
     DialogCreateTask,
     MyInput,
     ButtonMain,
+    ButtonDelete,
     ButtonText,
     ButtonText,
     TasksList,
